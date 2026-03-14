@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Danh sach truong{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Danh sach truong</h1>
+        <p class="text-body-secondary mb-0">Chon mot truong de di den danh sach khoa.</p>
+    </div>
+    <a href="{{ url_for('schools.create_school_view') }}" class="btn btn-primary">Them truong</a>
+</div>
+
+<div class="row g-4">
+    {% for school in schools %}
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                        <div>
+                            <h2 class="h5 mb-1">{{ school.name_vi }}</h2>
+                            <div class="text-body-secondary small">{{ school.code }}{% if school.name_en %} | {{ school.name_en }}{% endif %}</div>
+                        </div>
+                        <span class="badge text-bg-primary">{{ school.department_count }} khoa</span>
+                    </div>
+                    <p class="text-body-secondary small mb-4">Tong so mon hoc hien co: {{ school.course_count }}</p>
+                    <div class="mt-auto d-flex gap-2 flex-wrap">
+                        <a href="{{ url_for('departments.index', school_id=school.id) }}" class="btn btn-primary btn-sm">Xem khoa</a>
+                        <a href="{{ url_for('schools.edit_school_view', school_id=school.id) }}" class="btn btn-outline-primary btn-sm">Sua</a>
+                        <form action="{{ url_for('schools.delete_school_view', school_id=school.id) }}" method="post" onsubmit="return confirm('Xoa truong nay?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Xoa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-light border mb-0">Chua co truong nao.</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

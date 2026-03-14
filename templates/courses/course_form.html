@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if course %}Sua mon hoc{% else %}Them mon hoc{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-xl-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h1 class="h4 mb-0">{% if course %}Cap nhat mon hoc{% else %}Them mon hoc{% endif %}</h1>
+                <div class="small text-body-secondary mt-1">Khoa: {{ department.name_vi }}</div>
+            </div>
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label for="code" class="form-label">Ma mon hoc</label>
+                        <input type="text" class="form-control" id="code" name="code" value="{{ request.form.get('code', course.code if course else '') }}" required>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <label for="title_vi" class="form-label">Ten mon hoc</label>
+                        <input type="text" class="form-control" id="title_vi" name="title_vi" value="{{ request.form.get('title_vi', course.title_vi if course else '') }}" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="title_en" class="form-label">Ten tieng Anh</label>
+                        <input type="text" class="form-control" id="title_en" name="title_en" value="{{ request.form.get('title_en', course.title_en if course else '') }}">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label for="credits" class="form-label">Tin chi</label>
+                        <input type="number" min="0" class="form-control" id="credits" name="credits" value="{{ request.form.get('credits', course.credits if course else 0) }}" required>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label for="lecture_hours" class="form-label">Gio ly thuyet</label>
+                        <input type="number" min="0" class="form-control" id="lecture_hours" name="lecture_hours" value="{{ request.form.get('lecture_hours', course.lecture_hours if course else 0) }}" required>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label for="practice_hours" class="form-label">Gio thuc hanh</label>
+                        <input type="number" min="0" class="form-control" id="practice_hours" name="practice_hours" value="{{ request.form.get('practice_hours', course.practice_hours if course else 0) }}" required>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label for="self_study_hours" class="form-label">Gio tu hoc</label>
+                        <input type="number" min="0" class="form-control" id="self_study_hours" name="self_study_hours" value="{{ request.form.get('self_study_hours', course.self_study_hours if course else 0) }}" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="short_description" class="form-label">Mo ta ngan</label>
+                        <textarea class="form-control" id="short_description" name="short_description" rows="4">{{ request.form.get('short_description', course.short_description if course else '') }}</textarea>
+                    </div>
+
+                    <div class="col-12"><hr class="my-2"></div>
+                    <div class="col-12">
+                        <h2 class="h6 mb-2">Thong tin de cuong</h2>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="target_program" class="form-label">Chuong trinh dao tao</label>
+                        <input type="text" class="form-control" id="target_program" name="target_program" value="{{ request.form.get('target_program', course.target_program if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="level" class="form-label">Trinh do</label>
+                        <input type="text" class="form-control" id="level" name="level" value="{{ request.form.get('level', course.level if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="module_type" class="form-label">Loai hoc phan</label>
+                        <input type="text" class="form-control" id="module_type" name="module_type" value="{{ request.form.get('module_type', course.module_type if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label for="grading_scale" class="form-label">Thang diem</label>
+                        <input type="text" class="form-control" id="grading_scale" name="grading_scale" value="{{ request.form.get('grading_scale', course.grading_scale if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label for="passing_score" class="form-label">Diem dat</label>
+                        <input type="number" step="0.1" min="0" class="form-control" id="passing_score" name="passing_score" value="{{ request.form.get('passing_score', course.passing_score if course else '') }}">
+                    </div>
+                    <div class="col-12">
+                        <label for="teaching_method" class="form-label">Phuong phap giang day</label>
+                        <textarea class="form-control" id="teaching_method" name="teaching_method" rows="2">{{ request.form.get('teaching_method', course.teaching_method if course else '') }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="learning_resource_overview" class="form-label">Hoc lieu va tai nguyen</label>
+                        <textarea class="form-control" id="learning_resource_overview" name="learning_resource_overview" rows="2">{{ request.form.get('learning_resource_overview', course.learning_resource_overview if course else '') }}</textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="office_hours" class="form-label">Lich tiep sinh vien</label>
+                        <input type="text" class="form-control" id="office_hours" name="office_hours" value="{{ request.form.get('office_hours', course.office_hours if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="policy_note" class="form-label">Quy dinh khac</label>
+                        <input type="text" class="form-control" id="policy_note" name="policy_note" value="{{ request.form.get('policy_note', course.policy_note if course else '') }}">
+                    </div>
+
+                    <div class="col-12"><hr class="my-2"></div>
+                    <div class="col-12">
+                        <h2 class="h6 mb-2">Giang vien phu trach chinh</h2>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="primary_lecturer_name" class="form-label">Ho ten</label>
+                        <input type="text" class="form-control" id="primary_lecturer_name" name="primary_lecturer_name" value="{{ request.form.get('primary_lecturer_name', course.primary_lecturer_name if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="primary_lecturer_title" class="form-label">Hoc ham/hoc vi</label>
+                        <input type="text" class="form-control" id="primary_lecturer_title" name="primary_lecturer_title" value="{{ request.form.get('primary_lecturer_title', course.primary_lecturer_title if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="primary_lecturer_email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="primary_lecturer_email" name="primary_lecturer_email" value="{{ request.form.get('primary_lecturer_email', course.primary_lecturer_email if course else '') }}">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="primary_lecturer_phone" class="form-label">So dien thoai</label>
+                        <input type="text" class="form-control" id="primary_lecturer_phone" name="primary_lecturer_phone" value="{{ request.form.get('primary_lecturer_phone', course.primary_lecturer_phone if course else '') }}">
+                    </div>
+                    <div class="col-12">
+                        <label for="is_active" class="form-label">Trang thai</label>
+                        {% set selected_active = request.form.get('is_active', course.is_active if course else 1)|string %}
+                        <select class="form-select" id="is_active" name="is_active">
+                            <option value="1" {% if selected_active == '1' %}selected{% endif %}>Dang su dung</option>
+                            <option value="0" {% if selected_active == '0' %}selected{% endif %}>Tam an</option>
+                        </select>
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Luu</button>
+                        <a href="{{ url_for('courses.index', department_id=department.id) }}" class="btn btn-outline-secondary">Quay lai</a>
+                        {% if course %}
+                            <a href="{{ url_for('courses.detail_course_view', course_id=course.id) }}" class="btn btn-outline-dark">Xem chi tiet</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

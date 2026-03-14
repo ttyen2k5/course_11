@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Chi tiet mon hoc{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('schools.index') }}">Truong</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('departments.index', school_id=course.school_id) }}">{{ course.school_name_vi }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('courses.index', department_id=course.department_id) }}">{{ course.department_name_vi }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ course.code }}</li>
+            </ol>
+        </nav>
+        <h1 class="h3 mb-1">{{ course.title_vi }} ({{ course.code }})</h1>
+        <p class="text-body-secondary mb-0">{{ course.title_en or 'Chua co ten tieng Anh' }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('courses.edit_course_view', course_id=course.id) }}" class="btn btn-outline-primary">Sua mon hoc</a>
+        <a href="{{ url_for('courses.index', department_id=course.department_id) }}" class="btn btn-outline-secondary">Quay lai</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold">Thong tin chung</div>
+            <div class="card-body">
+                <div class="row g-2 small">
+                    <div class="col-6"><strong>Tin chi:</strong> {{ course.credits }}</div>
+                    <div class="col-6"><strong>Trang thai:</strong> {% if course.is_active %}Dang su dung{% else %}Tam an{% endif %}</div>
+                    <div class="col-6"><strong>Gio LT:</strong> {{ course.lecture_hours }}</div>
+                    <div class="col-6"><strong>Gio TH:</strong> {{ course.practice_hours }}</div>
+                    <div class="col-6"><strong>Gio tu hoc:</strong> {{ course.self_study_hours }}</div>
+                    <div class="col-6"><strong>Thang diem:</strong> {{ course.grading_scale or '-' }}</div>
+                    <div class="col-6"><strong>Diem dat:</strong> {{ course.passing_score or '-' }}</div>
+                    <div class="col-6"><strong>Loai hoc phan:</strong> {{ course.module_type or '-' }}</div>
+                    <div class="col-12"><strong>Chuong trinh:</strong> {{ course.target_program or '-' }}</div>
+                    <div class="col-12"><strong>Mo ta:</strong> {{ course.short_description or '-' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold">Giang vien phu trach</div>
+            <div class="card-body p-0">
+                {% if lecturers %}
+                    <ul class="list-group list-group-flush">
+                        {% for lecturer in lecturers %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start gap-2">
+                                    <div>
+                                        <div class="fw-semibold">{{ lecturer.full_name }}</div>
+                                        <div class="small text-body-secondary">{{ lecturer.title or 'Giang vien' }}</div>
+                                        <div class="small">{{ lecturer.email or '-' }} | {{ lecturer.phone or '-' }}</div>
+                                    </div>
+                                    {% if lecturer.is_primary %}
+                                        <span class="badge text-bg-primary">Chinh</span>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="p-3 text-body-secondary">Chua co thong tin giang vien.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">Muc tieu mon hoc</div>
+            <div class="card-body">
+                {% if objectives %}
+                    <ol class="mb-0">
+                        {% for item in objectives %}
+                            <li><strong>{{ item.objective_code or 'OBJ' }}</strong>: {{ item.description }}</li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <div class="text-body-secondary">Chua co du lieu muc tieu mon hoc.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">Chuan dau ra (CLO)</div>
+            <div class="card-body p-0">
+                {% if outcomes %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>CLO</th>
+                                    <th>Loai</th>
+                                    <th>Bloom</th>
+                                    <th>Mo ta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in outcomes %}
+                                    <tr>
+                                        <td>{{ item.clo_code or '-' }}</td>
+                                        <td>{{ item.domain or '-' }}</td>
+                                        <td>{{ item.bloom_level or '-' }}</td>
+                                        <td>{{ item.description }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="p-3 text-body-secondary">Chua co du lieu chuan dau ra.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">Noi dung giang day</div>
+            <div class="card-body p-0">
+                {% if topics %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tuan/Buoi</th>
+                                    <th>Chu de</th>
+                                    <th>Gio LT-TH-Tu hoc</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in topics %}
+                                    <tr>
+                                        <td>T{{ item.week_no or '-' }} / B{{ item.session_no or '-' }}</td>
+                                        <td>
+                                            <div>{{ item.topic_title }}</div>
+                                            <div class="small text-body-secondary">{{ item.topic_detail or '' }}</div>
+                                        </td>
+                                        <td>{{ item.theory_hours }} - {{ item.practice_hours }} - {{ item.self_study_hours }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="p-3 text-body-secondary">Chua co du lieu noi dung giang day.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold">Danh gia hoc phan</div>
+            <div class="card-body p-0">
+                {% if assessments %}
+                    <ul class="list-group list-group-flush">
+                        {% for item in assessments %}
+                            <li class="list-group-item">
+                                <div class="fw-semibold">{{ item.component_name }} ({{ item.weight_percent }}%)</div>
+                                <div class="small text-body-secondary">{{ item.assessment_method or '-' }}</div>
+                                <div class="small">{{ item.requirement or '' }}</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="p-3 text-body-secondary">Chua co du lieu danh gia.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold">Tai lieu tham khao</div>
+            <div class="card-body p-0">
+                {% if references %}
+                    <ul class="list-group list-group-flush">
+                        {% for item in references %}
+                            <li class="list-group-item">
+                                <div class="fw-semibold">{{ item.citation }}</div>
+                                <div class="small text-body-secondary">{{ item.ref_type }} | {{ item.author or '-' }} | {{ item.publish_year or '-' }}</div>
+                                {% if item.url %}
+                                    <a href="{{ item.url }}" target="_blank" rel="noopener" class="small">{{ item.url }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="p-3 text-body-secondary">Chua co tai lieu tham khao.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">Dieu kien hoc phan</div>
+            <div class="card-body">
+                {% if prerequisites %}
+                    <ul class="mb-0">
+                        {% for item in prerequisites %}
+                            <li>
+                                <strong>{{ item.relation_type }}</strong>: {{ item.required_code }} - {{ item.required_title }}
+                                {% if item.note %} ({{ item.note }}){% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="text-body-secondary">Khong co dieu kien tien quyet/song hanh.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

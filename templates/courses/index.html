@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Danh sach mon hoc{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('schools.index') }}">Truong</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('departments.index', school_id=school.id) }}">{{ school.name_vi }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ department.name_vi }}</li>
+            </ol>
+        </nav>
+        <h1 class="h3 mb-1">Danh sach mon hoc</h1>
+        <p class="text-body-secondary mb-0">Khoa: {{ department.name_vi }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('departments.edit_department_view', department_id=department.id) }}" class="btn btn-outline-primary">Sua khoa</a>
+        <a href="{{ url_for('courses.create_course_view', department_id=department.id) }}" class="btn btn-primary">Them mon hoc</a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        {% if courses %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ma</th>
+                            <th>Mon hoc</th>
+                            <th>Tin chi</th>
+                            <th>Trang thai</th>
+                            <th class="text-end">Thao tac</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses %}
+                            <tr>
+                                <td class="fw-semibold">{{ course.code }}</td>
+                                <td>
+                                    <div>{{ course.title_vi }}</div>
+                                    <div class="small text-body-secondary">LT {{ course.lecture_hours }} | TH {{ course.practice_hours }} | Tu hoc {{ course.self_study_hours }}</div>
+                                </td>
+                                <td>{{ course.credits }}</td>
+                                <td>
+                                    {% if course.is_active %}
+                                        <span class="badge text-bg-success">Dang su dung</span>
+                                    {% else %}
+                                        <span class="badge text-bg-secondary">Tam an</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('courses.detail_course_view', course_id=course.id) }}" class="btn btn-outline-secondary">Chi tiet</a>
+                                        <a href="{{ url_for('courses.edit_course_view', course_id=course.id) }}" class="btn btn-outline-primary">Sua</a>
+                                        <form action="{{ url_for('courses.delete_course_view', course_id=course.id) }}" method="post" onsubmit="return confirm('Xoa mon hoc nay?');">
+                                            <button type="submit" class="btn btn-outline-danger">Xoa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="p-4 text-body-secondary">Khoa nay chua co mon hoc.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

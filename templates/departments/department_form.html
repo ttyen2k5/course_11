@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if department %}Sua khoa{% else %}Them khoa{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-7 col-xl-6">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h1 class="h4 mb-0">{% if department %}Cap nhat khoa{% else %}Them khoa{% endif %}</h1>
+                <div class="small text-body-secondary mt-1">Truong: {{ school.name_vi }}</div>
+            </div>
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label for="code" class="form-label">Ma khoa</label>
+                        <input type="text" class="form-control" id="code" name="code" value="{{ request.form.get('code', department.code if department else '') }}" required>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <label for="name_vi" class="form-label">Ten khoa</label>
+                        <input type="text" class="form-control" id="name_vi" name="name_vi" value="{{ request.form.get('name_vi', department.name_vi if department else '') }}" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="name_en" class="form-label">Ten tieng Anh</label>
+                        <input type="text" class="form-control" id="name_en" name="name_en" value="{{ request.form.get('name_en', department.name_en if department else '') }}">
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Luu</button>
+                        <a href="{{ url_for('courses.index', department_id=department.id) if department else url_for('departments.index', school_id=school.id) }}" class="btn btn-outline-secondary">Quay lai</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
